@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useCarousel } from "@/hooks/useCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetCoursesQuery } from "@/state/api";
+import CourseCardSearch from "@/components/CourseCardSearch";
+import { useRouter } from "next/navigation";
 const LoadingSkeleton = () => {
   return (
     <div className="landing-skeleton">
@@ -40,10 +42,15 @@ const LoadingSkeleton = () => {
 };
 
 function Landing() {
+  const router = useRouter();
   const currentImage = useCarousel({ totalImages: 3 });
   const { data: courses, isLoading, isError } = useGetCoursesQuery({});
   console.log(courses);
-  //if (isLoading) return <LoadingSkeleton />;
+
+  const handleCourseClick = (courseId: string) => {
+    router.push(`/search?id=${courseId}`);
+  };
+  if (isLoading) return <LoadingSkeleton />;
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -114,7 +121,7 @@ function Landing() {
           ))}
         </div>
 
-        {/* <div className="landing__courses">
+        <div className="landing__courses">
           {courses &&
             courses.slice(0, 4).map((course, index) => (
               <motion.div
@@ -130,7 +137,7 @@ function Landing() {
                 />
               </motion.div>
             ))}
-        </div> */}
+        </div>
       </motion.div>
     </motion.div>
   );
